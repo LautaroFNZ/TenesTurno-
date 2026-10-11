@@ -50,6 +50,23 @@ export function countBooked(db, date){
   return Object.values(db.slots[date] || {}).reduce((n, s) => n + (s.blocked ? 0 : (s.a ? 1 : 0) + (s.b ? 1 : 0)), 0);
 }
 
+// Facturación de un día: suma de los precios cargados y cuántos turnos quedaron sin precio.
+// Un turno que todavía no llegó (hoy más tarde, o un día futuro) no es "sin precio": cuenta como pendiente.
+export function dayBilling(db, date, now = new Date()){
+  const nowMin = now.getHours() * 60 + now.getMinutes();
+  const today = fmt(now);
+  let total = 0, priced = 0, unpriced = 0, pending = 0;
+  for(const [t, s] of Object.entries(db.slots[date] || {})){
+    if(s.blocked) continue;
+    for(const [turn, start] of [[s.a, t], [s.b, halfTime(db, t)]]){
+      if(!turn) continue;
+      if(turn.price != null){ total += turn.price; priced++; continue; }
+      const future = date > today || (date === today && toMin(start) > nowMin);
+      if(future) pending++; else unpriced++;
+    }
+  }
+  return {total, priced, unpriced, pending};
+}
 
 // El segundo turno de un horario va en la mitad (11:30 → 11:45). Solo si la mitad cae en un minuto entero y redondo.
 export const canSplit = db => db.settings.step >= 20 && db.settings.step % 2 === 0;

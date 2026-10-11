@@ -3,7 +3,7 @@ import assert from 'node:assert/strict';
 import {defaults} from '../../js/core/data.js';
 import {
   dayInfo, range, weekTimes, dayTimes, inHours, getSlot, countBooked,
-  canSplit, halfTime, setSlotValue, freeTimes, availText
+  canSplit, halfTime, setSlotValue, freeTimes, availText, dayBilling
 } from '../../js/core/schedule.js';
 
 // 2026-10-13 es martes, 2026-10-14 miércoles, 2026-10-10 sábado, 2026-10-11 domingo
@@ -136,4 +136,44 @@ test('availText vacío si no hay nada libre', () => {
   const db = defaults();
   db.dayState[WED] = 'closed';
   assert.equal(availText(db, WED, new Date(2026, 9, 10, 14, 10)), '');
+});
+
+test('dayBilling: hoy, lo que todavía no llegó es pendiente y no "sin precio"', () => {
+  const db = defaults(), hoy = '2026-10-10', now = new Date(2026, 9, 10, 14, 10);
+  setSlotValue(db, hoy, '10:00', {a: {name: 'Ya pasó'}});                    // sin precio
+  setSlotValue(db, hoy, '14:00', {a: {name: 'Pasó', price: 7000}, b: {name: 'Mitad'}}); // 14:00 pasó, 14:15 todavía no
+  setSlotValue(db, hoy, '17:00', {a: {name: 'Futuro'}});                      // pendiente
+  assert.deepEqual(dayBilling(db, hoy, now), {total: 7000, priced: 1, unpriced: 1, pending: 2});
+});
+
+test('dayBilling: un día futuro está todo pendiente; el precio ya cargado igual suma', () => {
+  const db = defaults(), now = new Date(2026, 9, 10, 14, 10);
+  setSlotValue(db, WED, '10:00', {a: {name: 'A'}});
+  setSlotValue(db, WED, '11:00', {a: {name: 'B', price: 4000}});
+  assert.deepEqual(dayBilling(db, WED, now), {total: 4000, priced: 1, unpriced: 0, pending: 1});
+});
+
+test('dayBilling suma precios y cuenta los turnos sin precio (día pasado)', () => {
+  const db = defaults(), now = new Date(2026, 9, 20, 12, 0);
+  setSlotValue(db, TUE, '10:00', {a: {name: 'A', price: 8000}});
+  setSlotValue(db, TUE, '10:30', {a: {name: 'B'}, b: {name: 'C', price: 5000}});
+  setSlotValue(db, TUE, '11:00', {a: {name: 'D', price: 0}});
+  setSlotValue(db, TUE, '11:30', {blocked: true});
+  assert.deepEqual(dayBilling(db, TUE, now), {total: 13000, priced: 3, unpriced: 1, pending: 0});
+  assert.deepEqual(dayBilling(db, WED, now), {total: 0, priced: 0, unpriced: 0, pending: 0});
+});
+
+test('dayBilling: hoy, lo que todavía no llegó es pendiente y no "sin precio"', () => {
+  const db = defaults(), hoy = '2026-10-10', now = new Date(2026, 9, 10, 14, 10);
+  setSlotValue(db, hoy, '10:00', {a: {name: 'Ya pasó'}});                    // sin precio
+  setSlotValue(db, hoy, '14:00', {a: {name: 'Pasó', price: 7000}, b: {name: 'Mitad'}}); // 14:00 pasó, 14:15 todavía no
+  setSlotValue(db, hoy, '17:00', {a: {name: 'Futuro'}});                      // pendiente
+  assert.deepEqual(dayBilling(db, hoy, now), {total: 7000, priced: 1, unpriced: 1, pending: 2});
+});
+
+test('dayBilling: un día futuro está todo pendiente; el precio ya cargado igual suma', () => {
+  const db = defaults(), now = new Date(2026, 9, 10, 14, 10);
+  setSlotValue(db, WED, '10:00', {a: {name: 'A'}});
+  setSlotValue(db, WED, '11:00', {a: {name: 'B', price: 4000}});
+  assert.deepEqual(dayBilling(db, WED, now), {total: 4000, priced: 3 - 2, unpriced: 0, pending: 1});
 });

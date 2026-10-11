@@ -4,7 +4,7 @@ import {state} from '../store.js';
 import {$} from './dom.js';
 import {DAYS, DAYS_LONG, MON, parseDate, addDays, weekStart, todayStr} from '../core/dates.js';
 import {esc, money} from '../core/text.js';
-import {dayInfo, weekTimes, dayTimes, inHours, countBooked, dayBilling, getSlot, halfTime, freeTimes} from '../core/schedule.js';
+import {dayInfo, weekTimes, dayTimes, inHours, countBooked, getSlot, halfTime, freeTimes} from '../core/schedule.js';
 
 function weekTitle(){
   const {date} = state.view;
@@ -65,7 +65,8 @@ function dayCard(date, t, s){
 function dayHTML(){
   const {db, view} = state, date = view.date;
   const info = dayInfo(db, date), times = dayTimes(db, date), n = countBooked(db, date);
-  let h = `<div class="pad"><div class="dayhead"><p class="summary">${n} turno${n === 1 ? '' : 's'}${info.open ? '' : ' · día cerrado'}</p>` +
+  const bill = n ? ' · <button class="lnk" id="billOpen">Ver facturación</button>' : '';
+  let h = `<div class="pad"><div class="dayhead"><p class="summary">${n} turno${n === 1 ? '' : 's'}${info.open ? '' : ' · día cerrado'}${bill}</p>` +
           `<button class="btn sec sm" id="toggleDay">${info.open ? 'Cerrar día' : 'Abrir día'}</button></div>`;
   const nf = freeTimes(db, date).length;
   h += `<button class="btn block" id="copyAvail"${nf ? '' : ' disabled'}>${nf ? `Copiar turnos disponibles (${nf})` : 'No hay turnos disponibles'}</button>`;

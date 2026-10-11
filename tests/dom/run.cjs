@@ -2,7 +2,7 @@
 const {execFileSync} = require('child_process');
 const path = require('path');
 
-const files = ['weekly-view.cjs', 'availability.cjs', 'half-turns-and-price.cjs', 'data-safety.cjs'];
+const files = ['weekly-view.cjs', 'availability.cjs', 'half-turns-and-price.cjs', 'data-safety.cjs', 'billing.cjs'];
 let failed = false;
 for(const f of files){
   console.log('\n===== ' + f + ' =====');

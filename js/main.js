@@ -5,6 +5,7 @@ import {render} from './ui/render.js';
 import {bindNavigation} from './ui/events.js';
 import {bindSlotDialog} from './ui/slot-dialog.js';
 import {bindSettings} from './ui/settings-dialog.js';
+import {bindBilling} from './ui/billing-dialog.js';
 
 loadInto();
 try{ navigator.storage && navigator.storage.persist && navigator.storage.persist(); }catch(e){}
@@ -15,6 +16,7 @@ document.querySelectorAll('[data-close]').forEach(b => b.onclick = () => b.close
 bindNavigation();
 bindSlotDialog();
 bindSettings();
+bindBilling();
 
 if('serviceWorker' in navigator) navigator.serviceWorker.register('sw.js').catch(() => {});
 render();

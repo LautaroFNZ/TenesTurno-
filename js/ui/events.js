@@ -4,6 +4,7 @@ import {state, persist} from '../store.js';
 import {$} from './dom.js';
 import {render} from './render.js';
 import {openSlot} from './slot-dialog.js';
+import {openBilling} from './billing-dialog.js';
 import {copyText} from './clipboard.js';
 import {addDays, parseDate, todayStr} from '../core/dates.js';
 import {availText, dayInfo} from '../core/schedule.js';
@@ -40,6 +41,7 @@ function onAppClick(e){
   if(cell){ openSlot(cell.dataset.d, cell.dataset.t); return; }
   const head = e.target.closest('[data-day]');
   if(head){ state.view = {mode: 'day', date: head.dataset.day}; $('app').scrollTop = 0; render(); return; }
+  if(e.target.closest('#billOpen')){ openBilling(); return; }
   const copy = e.target.closest('#copyAvail');
   if(copy){ copyAvailable(copy); return; }
   if(e.target.closest('#toggleDay')) toggleDay();

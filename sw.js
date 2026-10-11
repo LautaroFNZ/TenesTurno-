@@ -4,14 +4,14 @@
 // AL PUBLICAR UNA VERSIÓN NUEVA: cambiar CACHE (que coincida con APP_VERSION en js/config.js).
 // Si se agrega o se quita un archivo de la app, actualizar también FILES.
 
-const CACHE = 'turnos-1.0.0';
+const CACHE = 'turnos-1.1.0';
 const FILES = [
   './', 'index.html', 'manifest.webmanifest',
   'css/styles.css',
   'js/main.js', 'js/config.js', 'js/store.js',
   'js/core/dates.js', 'js/core/text.js', 'js/core/data.js', 'js/core/schedule.js',
   'js/ui/dom.js', 'js/ui/render.js', 'js/ui/clipboard.js', 'js/ui/events.js',
-  'js/ui/slot-dialog.js', 'js/ui/settings-dialog.js',
+  'js/ui/slot-dialog.js', 'js/ui/settings-dialog.js', 'js/ui/billing-dialog.js',
   'icons/icon-180.png', 'icons/icon-512.png'
 ];
 

@@ -6,3 +6,7 @@
 - Si los datos guardados no se pueden leer, se guarda una copia (`turnos-v1-ilegible`) antes de empezar de cero.
 - La versión de la app se muestra en Ajustes.
 - Pruebas automáticas (unitarias y de pantalla).
+
+## 1.1.0
+- Vista Día: recuadro con la facturación del día y la cantidad de turnos sin precio cargado.
+- Los turnos que todavía no llegaron figuran como pendientes y no como sin precio.
