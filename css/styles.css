@@ -1,0 +1,115 @@
+/* Turnos — estilos
+   Los colores y el tema (claro / oscuro) están en variables; el resto va por secciones. */
+
+/* ---------- Variables y tema ---------- */
+:root{
+  --bg:#f3f4f6; --card:#fff; --text:#111827; --muted:#6b7280; --line:#e5e7eb;
+  --accent:#1f2937; --free:#16a34a; --busy:#dc2626; --off:#e9ecf0;
+  --rbg:#fecaca; --rtx:#7f1d1d; --rbd:#dc2626;
+}
+@media (prefers-color-scheme: dark){
+  :root{ --bg:#0f172a; --card:#1e293b; --text:#f1f5f9; --muted:#94a3b8; --line:#334155; --accent:#f1f5f9;
+         --off:#172033; --rbg:#7f1d1d; --rtx:#fee2e2; --rbd:#f87171; }
+}
+
+/* ---------- Base ---------- */
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+[hidden]{display:none !important}
+html,body{height:100%}
+body{margin:0;background:var(--bg);color:var(--text);font:17px/1.35 -apple-system,BlinkMacSystemFont,"SF Pro Text",system-ui,sans-serif;
+  display:flex;flex-direction:column;height:100vh;height:100dvh;overflow:hidden}
+button{font:inherit;color:inherit;border:0;background:none;cursor:pointer}
+
+/* ---------- Encabezado ---------- */
+header{padding:calc(env(safe-area-inset-top) + 8px) 10px 8px;border-bottom:1px solid var(--line);background:var(--bg)}
+.bar{display:flex;align-items:center;gap:2px}
+.bar h1{flex:1;margin:0;font-size:19px;text-align:center;text-transform:capitalize;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.icon{font-size:26px;line-height:1;padding:6px 12px}
+.pill{border:1px solid var(--line);background:var(--card);border-radius:999px;padding:6px 12px;font-size:15px;font-weight:600}
+.seg{display:flex;background:var(--card);border:1px solid var(--line);border-radius:10px;margin:8px 4px 0;padding:2px}
+.seg button{flex:1;padding:6px;border-radius:8px;font-size:15px;font-weight:600;color:var(--muted)}
+.seg button.on{background:var(--accent);color:var(--bg)}
+
+.scroll{flex:1;overflow:auto;-webkit-overflow-scrolling:touch;padding-bottom:env(safe-area-inset-bottom)}
+.pad{padding:14px 16px 40px;max-width:560px;margin:0 auto}
+
+/* Datos de una versión más nueva: se muestra solo el aviso */
+body.locked header{display:none}
+
+/* ---------- Vista semanal ---------- */
+.grid{display:grid;grid-template-columns:42px repeat(7,minmax(0,1fr));padding-bottom:40px}
+.gh{position:sticky;top:0;z-index:3;background:var(--bg);border-bottom:1px solid var(--line);padding:6px 0;
+    display:flex;flex-direction:column;align-items:center;gap:2px;min-width:0}
+.gh small{color:var(--muted);text-transform:uppercase;font-size:11px;font-weight:600}
+.gh b{font-size:16px;width:28px;height:28px;line-height:28px;text-align:center;border-radius:50%}
+.gh.today b{background:var(--accent);color:var(--bg)}
+.gh.closed{opacity:.45}
+.tl{height:44px;font-size:10px;color:var(--muted);text-align:right;padding:3px 5px 0 0;border-top:1px solid var(--line);font-variant-numeric:tabular-nums}
+.c{height:44px;min-width:0;border:0;border-top:1px solid var(--line);border-left:1px solid var(--line);padding:2px 3px;
+   font-size:11px;line-height:12px;text-align:left;background:var(--card);border-radius:0;overflow:hidden;display:block;width:100%}
+.c.free:active{background:var(--line)}
+.c.off{background:var(--off)}
+.c.block{background:repeating-linear-gradient(45deg,var(--off),var(--off) 5px,var(--card) 5px,var(--card) 10px)}
+.c.busy{background:var(--rbg);color:var(--rtx);font-weight:600;border-left:3px solid var(--rbd)}
+.c.busy span{display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden;overflow-wrap:anywhere}
+/* celda partida al medio: dos turnos dentro del mismo horario */
+.c.split{padding:0;display:flex;flex-direction:column;background:var(--card)}
+.c.split .h{flex:1 1 0;min-height:0;display:block;padding:0 2px 0 3px;font-size:10px;line-height:21px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.c.split .h.busy{background:var(--rbg);color:var(--rtx);font-weight:600;border-left:3px solid var(--rbd)}
+.c.split .h + .h{border-top:1px solid var(--card)}
+.c.split i{font-style:normal;font-weight:700;opacity:.75;margin-right:2px}
+
+/* ---------- Vista día ---------- */
+.dayhead{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:12px}
+.summary{color:var(--muted);margin:0}
+.empty{color:var(--muted);text-align:center;padding:40px 10px}
+.slot{display:flex;align-items:center;gap:12px;background:var(--card);border:1px solid var(--line);border-radius:12px;
+  padding:12px 14px;margin-bottom:8px;width:100%;text-align:left;min-height:54px}
+.slot .t{font-weight:700;width:54px;font-variant-numeric:tabular-nums;align-self:flex-start;padding-top:1px}
+.slot .n{flex:1;min-width:0;display:flex;flex-direction:column;gap:3px}
+.slot.busy{background:var(--rbg);color:var(--rtx);border-left:5px solid var(--rbd)}
+.slot.free .n{color:var(--muted)}
+.slot.block{background:repeating-linear-gradient(45deg,var(--off),var(--off) 6px,var(--card) 6px,var(--card) 12px);color:var(--muted)}
+.ln{display:flex;justify-content:space-between;gap:10px;align-items:baseline}
+.nm{font-weight:700;min-width:0;overflow-wrap:anywhere}
+.nm.muted{font-weight:400;opacity:.7}
+.at{font-style:normal;font-weight:400;opacity:.8;margin-right:6px;font-variant-numeric:tabular-nums}
+.pr{font-weight:600;font-variant-numeric:tabular-nums;white-space:nowrap}
+
+/* ---------- Botones ---------- */
+.btn{background:var(--accent);color:var(--bg);padding:10px 16px;border-radius:12px;font-weight:600}
+.btn.sec{background:var(--card);color:var(--text);border:1px solid var(--line)}
+.btn.danger{background:var(--busy);color:#fff}
+.btn.sm{padding:8px 12px;font-size:15px}
+.btn.block{display:block;width:100%;margin:0 0 14px;padding:13px 16px}
+.btn[disabled]{opacity:.45;cursor:default}
+
+/* ---------- Diálogos y formularios ---------- */
+dialog{border:0;border-radius:18px;padding:20px;width:min(92vw,420px);background:var(--card);color:var(--text);max-height:90vh;overflow:auto}
+dialog::backdrop{background:rgba(0,0,0,.45)}
+dialog h3{margin:0 0 12px;text-transform:capitalize}
+label{display:block;font-size:14px;color:var(--muted);margin:10px 0 4px}
+input,select,textarea{width:100%;font:inherit;padding:12px;border-radius:10px;border:1px solid var(--line);background:var(--bg);color:var(--text)}
+input[type=checkbox]{width:22px;height:22px;padding:0;flex:none}
+.row{display:flex;gap:8px}.row>*{flex:1}
+.nrow{display:flex;gap:8px}
+.nrow input{flex:1;min-width:0}
+.plus{flex:none;width:50px;border-radius:10px;border:1px solid var(--line);background:var(--bg);font-size:26px;line-height:1;font-weight:600}
+.plus:active{background:var(--line)}
+.actions{display:flex;gap:8px;margin-top:16px;flex-wrap:wrap}
+.actions .btn{flex:1;min-width:110px;padding-left:8px;padding-right:8px;white-space:nowrap}
+.actions.three{flex-wrap:nowrap}
+.actions.three .btn{min-width:0;flex:1 1 auto;padding-left:6px;padding-right:6px;font-size:16px}
+.note{font-size:13px;color:var(--muted);margin-top:14px}
+.linkbtn{display:block;margin:14px auto 0;color:var(--muted);font-size:14px;text-decoration:underline;padding:6px 10px}
+.who{font-size:22px;font-weight:700;margin:4px 0 2px}
+.whonote{color:var(--muted);margin:0 0 4px}
+.pick{display:flex;justify-content:space-between;align-items:center;gap:10px;width:100%;text-align:left;padding:14px;margin:8px 0 0;
+  border-radius:12px;background:var(--rbg);color:var(--rtx);border-left:5px solid var(--rbd);font-weight:700}
+.pick span:last-child{font-weight:600;white-space:nowrap}
+
+/* ---------- Ajustes ---------- */
+.srow{display:grid;grid-template-columns:1fr 104px 104px;gap:6px;align-items:center;margin-bottom:6px}
+.srow .chk{display:flex;align-items:center;gap:10px;margin:0;font-size:16px;color:var(--text)}
+.srow input[type=time]{padding:8px}
+.srow.shut input[type=time]{opacity:.4}

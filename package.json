@@ -1,0 +1,20 @@
+{
+  "name": "turnos",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Agenda de turnos para peluquería (PWA, sin build)",
+  "type": "module",
+  "scripts": {
+    "start": "python -m http.server 8080",
+    "test": "node --test",
+    "test:dom": "node tests/dom/run.cjs",
+    "test:all": "npm test && npm run test:dom"
+  },
+  "engines": {
+    "node": ">=20"
+  },
+  "devDependencies": {
+    "esbuild": "^0.28.2",
+    "jsdom": "^29.1.1"
+  }
+}

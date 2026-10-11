@@ -1,0 +1,126 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Turnos">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="theme-color" content="#1f2937">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="apple-touch-icon" href="icons/icon-180.png">
+<title>Turnos</title>
+<link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+<header>
+  <div class="bar">
+    <button class="icon" id="prev" aria-label="Anterior">‹</button>
+    <button class="icon" id="next" aria-label="Siguiente">›</button>
+    <h1 id="hTitle"></h1>
+    <button class="pill" id="todayBtn">Hoy</button>
+    <button class="icon" id="menuBtn" aria-label="Ajustes">⚙︎</button>
+  </div>
+  <div class="seg">
+    <button data-v="week">Semana</button>
+    <button data-v="day">Día</button>
+  </div>
+</header>
+<main id="app" class="scroll"></main>
+
+<!-- Turno -->
+<dialog id="dlgSlot">
+  <h3 id="sTitle"></h3>
+
+  <!-- Anotar (horario libre, o agregar el otro turno de un horario) -->
+  <form method="dialog" id="fSlot">
+    <div id="wrapA">
+      <label id="lblA" for="sName">Nombre</label>
+      <div class="nrow">
+        <input id="sName" autocomplete="off" autocapitalize="words" placeholder="Ej: Juan">
+        <button type="button" class="plus" id="sPlus" aria-label="Agregar otro turno en la mitad de este horario">+</button>
+      </div>
+    </div>
+    <div id="wrapB" hidden>
+      <label id="lblB" for="sName2">Nombre</label>
+      <input id="sName2" autocomplete="off" autocapitalize="words" placeholder="Ej: Ana">
+    </div>
+    <div class="actions">
+      <button type="button" class="btn sec" data-close>Cancelar</button>
+      <button class="btn" value="ok">Anotar</button>
+    </div>
+    <button type="button" class="linkbtn" id="sBlock">Bloquear este horario</button>
+  </form>
+
+  <!-- Horario con dos turnos: elegir cuál -->
+  <div id="sPick" hidden>
+    <p class="whonote">¿Qué turno querés modificar?</p>
+    <button type="button" class="pick" id="pickA"></button>
+    <button type="button" class="pick" id="pickB"></button>
+    <div class="actions"><button type="button" class="btn sec" data-close>Volver</button></div>
+  </div>
+
+  <!-- Detalle de un turno -->
+  <div id="sInfo" hidden>
+    <p class="who" id="iName"></p>
+    <p class="whonote" id="iPrice"></p>
+    <div class="actions three">
+      <button type="button" class="btn sec" id="iBack">Volver</button>
+      <button type="button" class="btn danger" id="sCancelTurn">Cancelar turno</button>
+      <button type="button" class="btn" id="sPriceBtn">Precio</button>
+    </div>
+    <button type="button" class="linkbtn" id="sAddHalf" hidden></button>
+  </div>
+
+  <!-- Precio -->
+  <form id="sPriceForm" hidden>
+    <p class="who" id="pName"></p>
+    <label for="sPrice">Precio</label>
+    <input id="sPrice" inputmode="numeric" autocomplete="off" placeholder="Ej: 12000">
+    <p class="note">Dejalo vacío para quitar el precio.</p>
+    <div class="actions">
+      <button type="button" class="btn sec" id="pBack">Volver</button>
+      <button type="submit" class="btn">Guardar</button>
+    </div>
+  </form>
+
+  <!-- Horario bloqueado -->
+  <div id="sBlocked" hidden>
+    <p class="whonote">Este horario está bloqueado.</p>
+    <div class="actions">
+      <button type="button" class="btn sec" data-close>Volver</button>
+      <button type="button" class="btn" id="sUnblock">Desbloquear</button>
+    </div>
+  </div>
+</dialog>
+
+<!-- Copia manual (si el teléfono no deja copiar solo) -->
+<dialog id="dlgCopy">
+  <h3>Copiá este texto</h3>
+  <textarea id="copyArea" readonly rows="10"></textarea>
+  <p class="note">Mantené apretado el texto, elegí "Seleccionar todo" y "Copiar".</p>
+  <div class="actions"><button type="button" class="btn" data-close>Cerrar</button></div>
+</dialog>
+
+<!-- Ajustes -->
+<dialog id="dlgMenu">
+  <h3>Ajustes</h3>
+  <label>Días y horarios de trabajo</label>
+  <div id="schedRows"></div>
+  <label>Intervalo entre turnos</label>
+  <select id="cStep"><option value="15">15 min</option><option value="20">20 min</option><option value="30">30 min</option><option value="45">45 min</option><option value="60">60 min</option></select>
+  <p class="note">Los horarios se completan solos para cada semana. Para un feriado o un día especial, entrá a esa fecha en la vista Día y usá "Cerrar día" o "Abrir día". El botón + para anotar dos turnos en un mismo horario funciona con intervalos de 20, 30 o 60 min.</p>
+  <div class="actions">
+    <button class="btn sec" id="exportBtn">Exportar respaldo</button>
+    <button class="btn sec" id="importBtn">Importar respaldo</button>
+  </div>
+  <input type="file" id="importFile" accept="application/json,.json" hidden>
+  <p class="note">Los datos se guardan solo en este teléfono. Exportá un respaldo de vez en cuando.</p>
+  <p class="note" id="appVersion"></p>
+  <div class="actions"><button class="btn" id="cClose">Listo</button></div>
+</dialog>
+
+<script type="module" src="js/main.js"></script>
+</body>
+</html>
