@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import {esc, money, parsePrice} from '../../js/core/text.js';
+import {esc, money, moneyShort, parsePrice} from '../../js/core/text.js';
 
 test('esc escapa HTML', () => {
   assert.equal(esc('<img src=x onerror=alert(1)>'), '&lt;img src=x onerror=alert(1)&gt;');
@@ -34,4 +34,14 @@ test('parsePrice rechaza lo que no es un número', () => {
 
 test('parsePrice toma el punto como separador de miles (12.5 vale 125)', () => {
   assert.deepEqual(parsePrice('12.5'), {ok: true, value: 125});
+});
+
+
+test('moneyShort abrevia para etiquetas chicas', () => {
+  assert.equal(moneyShort(0), '—');
+  assert.equal(moneyShort(850), '$850');
+  assert.equal(moneyShort(8500), '$8,5k');
+  assert.equal(moneyShort(52000), '$52k');
+  assert.equal(moneyShort(186500), '$187k');
+  assert.equal(moneyShort(1250000), '$1,3M');
 });

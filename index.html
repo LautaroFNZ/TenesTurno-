@@ -113,22 +113,52 @@
   </div>
 </dialog>
 
-<!-- Ajustes -->
-<dialog id="dlgMenu">
-  <h3>Ajustes</h3>
-  <label>Días y horarios de trabajo</label>
-  <div id="schedRows"></div>
-  <label>Intervalo entre turnos</label>
-  <select id="cStep"><option value="15">15 min</option><option value="20">20 min</option><option value="30">30 min</option><option value="45">45 min</option><option value="60">60 min</option></select>
-  <p class="note">Los horarios se completan solos para cada semana. Para un feriado o un día especial, entrá a esa fecha en la vista Día y usá "Cerrar día" o "Abrir día". El botón + para anotar dos turnos en un mismo horario funciona con intervalos de 20, 30 o 60 min.</p>
-  <div class="actions">
-    <button class="btn sec" id="exportBtn">Exportar respaldo</button>
-    <button class="btn sec" id="importBtn">Importar respaldo</button>
+<!-- Ajustes: pantalla completa con una lista y una pantalla por sección -->
+<dialog id="dlgMenu" class="page">
+  <div class="pagebar">
+    <button type="button" class="barbtn" id="menuBack">‹ Ajustes</button>
+    <h2 id="menuTitle">Ajustes</h2>
+    <button type="button" class="barbtn right" id="menuClose">Cerrar</button>
   </div>
-  <input type="file" id="importFile" accept="application/json,.json" hidden>
-  <p class="note">Los datos se guardan solo en este teléfono. Exportá un respaldo de vez en cuando.</p>
-  <p class="note" id="appVersion"></p>
-  <div class="actions"><button class="btn" id="cClose">Listo</button></div>
+  <div class="pagebody" id="menuBody"><div class="pad">
+
+    <section id="mHome">
+      <button type="button" class="item" data-go="mSched"><span><b>Días y horarios</b><small>Cuándo atendés</small></span><i>›</i></button>
+      <button type="button" class="item" data-go="mBackup"><span><b>Respaldos</b><small>Exportar e importar tus datos</small></span><i>›</i></button>
+      <button type="button" class="item" data-go="mReports"><span><b>Reportes</b><small>Facturación por día, semana y mes</small></span><i>›</i></button>
+      <p class="note" id="appVersion"></p>
+    </section>
+
+    <section id="mSched" hidden>
+      <div id="schedRows"></div>
+      <p class="note">Los horarios se completan solos para cada semana. Para un feriado o un día especial, entrá a esa fecha en la vista Día y usá "Cerrar día" o "Abrir día". Cada horario dura 30 minutos, y con el botón + podés anotar dos turnos en un mismo horario.</p>
+      <div class="actions"><button type="button" class="btn" id="sDone">Listo</button></div>
+    </section>
+
+    <section id="mBackup" hidden>
+      <div class="actions">
+        <button type="button" class="btn sec" id="exportBtn">Exportar respaldo</button>
+        <button type="button" class="btn sec" id="importBtn">Importar respaldo</button>
+      </div>
+      <input type="file" id="importFile" accept="application/json,.json" hidden>
+      <p class="note">Los datos se guardan solo en este teléfono. Exportá un respaldo de vez en cuando.</p>
+    </section>
+
+    <section id="mReports" hidden>
+      <div class="tabs" id="rTabs">
+        <button type="button" data-m="day">Día</button>
+        <button type="button" data-m="week">Semana</button>
+        <button type="button" data-m="month">Mes</button>
+      </div>
+      <div class="pnav">
+        <button type="button" class="icon" id="rPrev" aria-label="Anterior">‹</button>
+        <b id="rTitle"></b>
+        <button type="button" class="icon" id="rNext" aria-label="Siguiente">›</button>
+      </div>
+      <div id="rBody"></div>
+    </section>
+
+  </div></div>
 </dialog>
 
 <script type="module" src="js/main.js"></script>

@@ -71,9 +71,16 @@ test('migrate: formato 2 (name/note) pasa al formato actual', () => {
 });
 
 test('migrate: el formato actual se conserva igual', () => {
-  const src = {version: SCHEMA_VERSION, settings: {step: 20, schedule: sched()}, slots: {'2026-10-13': {'11:00': {a: {name: 'A', price: 1000}, b: {name: 'B'}}}}, dayState: {'2026-10-14': 'closed'}};
+  const src = {version: SCHEMA_VERSION, settings: {step: 30, schedule: sched()}, slots: {'2026-10-13': {'11:00': {a: {name: 'A', price: 1000}, b: {name: 'B'}}}}, dayState: {'2026-10-14': 'closed'}};
   const copia = JSON.parse(JSON.stringify(src));
   assert.deepEqual(migrate(src), copia);
+});
+
+test('migrate: el intervalo ya no se elige, siempre queda en 30', () => {
+  for(const step of [15, 20, 45, 60, undefined]){
+    const d = migrate({version: SCHEMA_VERSION, settings: {step, schedule: sched()}, slots: {}, dayState: {}});
+    assert.equal(d.settings.step, 30);
+  }
 });
 
 test('migrate: devuelve null si no entiende los datos', () => {

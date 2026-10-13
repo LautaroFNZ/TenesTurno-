@@ -2,6 +2,7 @@
 // primer argumento y no tocan el navegador, así que se pueden probar (y reutilizar) sin pantalla.
 
 import {toMin, toTime, fmt, parseDate, DAYS_LONG, MONTHS} from './dates.js';
+import {SLOT_MINUTES} from '../config.js';
 
 // Horario de trabajo de una fecha: el habitual del día de la semana, salvo que tenga una excepción.
 export function dayInfo(db, date){
@@ -11,8 +12,8 @@ export function dayInfo(db, date){
 }
 
 export function range(db, lo, hi){
-  const out = [], step = db.settings.step;
-  for(let m = lo; m < hi; m += step) out.push(toTime(m));
+  const out = [];
+  for(let m = lo; m < hi; m += SLOT_MINUTES) out.push(toTime(m));
   return out;
 }
 
@@ -68,9 +69,8 @@ export function dayBilling(db, date, now = new Date()){
   return {total, priced, unpriced, pending};
 }
 
-// El segundo turno de un horario va en la mitad (11:30 → 11:45). Solo si la mitad cae en un minuto entero y redondo.
-export const canSplit = db => db.settings.step >= 20 && db.settings.step % 2 === 0;
-export const halfTime = (db, t) => toTime(toMin(t) + db.settings.step / 2);
+// El segundo turno de un horario va en la mitad (11:30 → 11:45). `db` no se usa: queda por compatibilidad con quien la llama.
+export const halfTime = (db, t) => toTime(toMin(t) + SLOT_MINUTES / 2);
 
 // Guarda (o borra, con val = null) lo que hay en un horario, limpiando los días que quedan vacíos.
 export function setSlotValue(db, date, t, val){

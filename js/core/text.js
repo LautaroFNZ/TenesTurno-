@@ -15,3 +15,13 @@ export function parsePrice(input){
   if(!isFinite(n) || n < 0) return {ok: false};
   return {ok: true, value: n};
 }
+
+
+// Dinero abreviado para etiquetas chicas (gráficos): 8500 → $8,5k · 52000 → $52k · 1250000 → $1,3M · 0 → —
+export function moneyShort(n){
+  if(!n) return '—';
+  if(n >= 1e6) return '$' + (n / 1e6).toLocaleString('es-AR', {maximumFractionDigits: 1}) + 'M';
+  if(n >= 1e4) return '$' + Math.round(n / 1000) + 'k';
+  if(n >= 1000) return '$' + (n / 1000).toLocaleString('es-AR', {maximumFractionDigits: 1}) + 'k';
+  return money(n);
+}

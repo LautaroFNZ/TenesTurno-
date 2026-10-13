@@ -159,18 +159,14 @@ const st = T.stored().slots[wed];
 check('al guardar queda en formato nuevo, sin nota', JSON.stringify(st['10:00']) === '{"a":{"name":"Pedro","price":9000}}');
 check('sin errores en migración', errors.length === 0);
 
-// ===== 10) Intervalos donde no se puede partir
-for(const step of [15,45]){
+// ===== 10) El intervalo es fijo (30): aunque haya datos guardados con otro, el + siempre está y el 2º turno cae a +15
+for(const step of [15,20,45,60]){
   T = boot(mk({}, step)); ({w,d,$} = T);
-  const first = d.querySelector('.c.free'); first.click();
-  check(`intervalo ${step}: el + no aparece`, $('sPlus').hidden);
+  T.cell(tue,'11:00','.free').click();
+  check(`datos guardados con intervalo ${step}: el + aparece`, !$('sPlus').hidden);
+  $('sPlus').click();
+  check(`datos guardados con intervalo ${step}: el 2º turno es a las 11:15`, $('lblB').textContent === 'Nombre 11:15');
 }
-T = boot(mk({}, 60)); ({w,d,$} = T);
-T.cell(tue,'11:00','.free').click(); $('sPlus').click();
-check('intervalo 60: el 2º turno es a las 11:30', $('lblB').textContent === 'Nombre 11:30');
-T = boot(mk({}, 20)); ({w,d,$} = T);
-T.cell(tue,'11:00','.free').click(); $('sPlus').click();
-check('intervalo 20: el 2º turno es a las 11:10', $('lblB').textContent === 'Nombre 11:10');
 
 // ===== 11) XSS en nombres
 T = boot(); ({w,d,$} = T);

@@ -1,6 +1,6 @@
 {
   "name": "TenesTurno?",
-  "version": "1.1.0",
+  "version": "1.2.0",
   "private": true,
   "description": "Agenda de turnos para peluquería (PWA, sin build)",
   "type": "module",

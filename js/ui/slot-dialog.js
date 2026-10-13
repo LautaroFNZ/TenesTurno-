@@ -12,7 +12,7 @@ import {$} from './dom.js';
 import {render} from './render.js';
 import {DAYS_LONG, parseDate} from '../core/dates.js';
 import {esc, money, parsePrice} from '../core/text.js';
-import {getSlot, canSplit, halfTime, setSlotValue} from '../core/schedule.js';
+import {getSlot, halfTime, setSlotValue} from '../core/schedule.js';
 
 const VIEWS = ['fSlot', 'sPick', 'sInfo', 'sPriceForm', 'sBlocked'];
 const show = id => VIEWS.forEach(v => { $(v).hidden = v !== id; });
@@ -48,7 +48,7 @@ function showForm(mode){
   $('sName').value = ''; $('sName2').value = '';
   $('wrapA').hidden = mode === 'addB';
   $('wrapB').hidden = mode !== 'addB';
-  $('sPlus').hidden = !(mode === 'new' && canSplit(db));
+  $('sPlus').hidden = mode !== 'new';
   $('sPlus').textContent = '+';
   $('lblA').textContent = mode === 'addA' ? `Nombre ${ctx.t}` : 'Nombre';
   $('lblB').textContent = `Nombre ${halfTime(db, ctx.t)}`;
@@ -75,7 +75,7 @@ function showInfo(which, fromPick){
   setTitle(turnTime(which));
   $('iName').textContent = turn.name;
   $('iPrice').textContent = turn.price != null ? 'Precio: ' + money(turn.price) : 'Sin precio cargado';
-  $('sAddHalf').hidden = !(canSplit(db) && !s[other]);
+  $('sAddHalf').hidden = !!s[other];
   $('sAddHalf').textContent = `Agregar turno ${turnTime(other)}`;
   show('sInfo');
 }

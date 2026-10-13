@@ -2,19 +2,19 @@
 //
 //   db = {
 //     version: 3,
-//     settings: { step: 30, schedule: { 0..6: { open, start:'09:00', end:'20:00' } } },
+//     settings: { step: 30 /* fijo */, schedule: { 0..6: { open, start:'09:00', end:'20:00' } } },
 //     slots:    { 'AAAA-MM-DD': { 'HH:MM': { a:{name, price?}, b:{name, price?} } | { blocked:true } } },
 //     dayState: { 'AAAA-MM-DD': 'open' | 'closed' }   // excepciones al horario habitual
 //   }
 //
 // "a" es el turno de la hora; "b" es el turno en la mitad de ese horario (11:30 → 11:45).
 
-import {SCHEMA_VERSION} from '../config.js';
+import {SCHEMA_VERSION, SLOT_MINUTES} from '../config.js';
 
 export function defaults(){
   const schedule = {};
   for(let i = 0; i < 7; i++) schedule[i] = {open: true, start: '09:00', end: '20:00'}; // todos los días abiertos
-  return {version: SCHEMA_VERSION, settings: {step: 30, schedule}, slots: {}, dayState: {}};
+  return {version: SCHEMA_VERSION, settings: {step: SLOT_MINUTES, schedule}, slots: {}, dayState: {}};
 }
 
 export function cleanTurn(x){
@@ -54,7 +54,6 @@ export function migrate(d){
 
   if(d.days && !d.slots){ // formato 1: prototipo inicial
     const out = defaults(), s = d.settings || {};
-    out.settings.step = Number(s.step) || 30;
     for(let i = 0; i < 7; i++){ out.settings.schedule[i].start = s.start || '09:00'; out.settings.schedule[i].end = s.end || '20:00'; }
     Object.keys(d.days).forEach(k => {
       out.slots[k] = (d.days[k] && d.days[k].slots) || {};
@@ -66,7 +65,7 @@ export function migrate(d){
 
   if(!d.slots || typeof d.slots !== 'object' || !d.settings || !d.settings.schedule) return null;
   for(let i = 0; i < 7; i++){ const x = d.settings.schedule[i]; if(!x || typeof x.start !== 'string' || typeof x.end !== 'string') return null; }
-  d.settings.step = Number(d.settings.step) || 30;
+  d.settings.step = SLOT_MINUTES; // el intervalo ya no se elige: siempre 30 (el campo se mantiene por compatibilidad con respaldos)
   d.dayState = d.dayState || {};
   d.slots = normSlots(d.slots);
 

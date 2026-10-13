@@ -1,7 +1,11 @@
 // Configuración global de la app.
 
 // Versión de la app. Subirla en cada publicación (y también CACHE en sw.js).
-export const APP_VERSION = '1.1.0';
+export const APP_VERSION = '1.2.0';
+
+// Duración de cada horario de la agenda, en minutos. Es fija: el segundo turno de un horario
+// (botón +) cae justo a la mitad (11:30 → 11:45).
+export const SLOT_MINUTES = 30;
 
 // Clave de localStorage. NO cambiarla: es lo que conecta la app con los datos
 // que ya están guardados en el celular.

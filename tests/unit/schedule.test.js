@@ -3,12 +3,11 @@ import assert from 'node:assert/strict';
 import {defaults} from '../../js/core/data.js';
 import {
   dayInfo, range, weekTimes, dayTimes, inHours, getSlot, countBooked,
-  canSplit, halfTime, setSlotValue, freeTimes, availText, dayBilling
+  halfTime, setSlotValue, freeTimes, availText, dayBilling
 } from '../../js/core/schedule.js';
 
 // 2026-10-13 es martes, 2026-10-14 miércoles, 2026-10-10 sábado, 2026-10-11 domingo
 const TUE = '2026-10-13', WED = '2026-10-14';
-const withStep = step => { const db = defaults(); db.settings.step = step; return db; };
 
 test('range: de 9 a 20 cada 30 min son 22 horarios', () => {
   const r = range(defaults(), 9 * 60, 20 * 60);
@@ -77,16 +76,11 @@ test('countBooked cuenta los dos turnos de un horario y no los bloqueos', () => 
   assert.equal(countBooked(db, WED), 0);
 });
 
-test('canSplit y halfTime según el intervalo', () => {
-  assert.equal(canSplit(withStep(15)), false);
-  assert.equal(canSplit(withStep(45)), false);
-  assert.equal(canSplit(withStep(20)), true);
-  assert.equal(canSplit(withStep(30)), true);
-  assert.equal(canSplit(withStep(60)), true);
-  assert.equal(halfTime(withStep(30), '11:30'), '11:45');
-  assert.equal(halfTime(withStep(30), '13:00'), '13:15');
-  assert.equal(halfTime(withStep(20), '11:00'), '11:10');
-  assert.equal(halfTime(withStep(60), '11:00'), '11:30');
+test('halfTime: el turno de la mitad cae 15 minutos después (el horario dura 30)', () => {
+  const db = defaults();
+  assert.equal(halfTime(db, '11:30'), '11:45');
+  assert.equal(halfTime(db, '13:00'), '13:15');
+  assert.equal(halfTime(db, '09:00'), '09:15');
 });
 
 test('setSlotValue guarda, borra y limpia el día cuando queda vacío', () => {

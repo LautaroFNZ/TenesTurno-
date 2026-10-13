@@ -118,20 +118,27 @@ check('reabrir domingo', d.querySelectorAll('.gh.closed').length === 0);
 
 // ---- 6) Ajustes: cambiar horario de martes y abrir lunes
 $('menuBtn').click();
+check('ajustes abre en la lista de secciones', !$('mHome').hidden && $('mSched').hidden && $('menuTitle').textContent === 'Ajustes');
+d.querySelector('[data-go="mSched"]').click();
 check('ajustes: los 7 días tildados', d.querySelectorAll('[data-o]:checked').length === 7);
 check('ajustes con 7 filas', d.querySelectorAll('.srow').length === 7);
 const orden = [...d.querySelectorAll('.srow .chk span')].map(s=>s.textContent).join(',');
 check('orden lunes→domingo', orden === 'Lunes,Martes,Miércoles,Jueves,Viernes,Sábado,Domingo');
 d.querySelector('[data-o="1"]').checked = false;
 d.querySelector('[data-s="2"]').value = '10:00'; d.querySelector('[data-e="2"]').value = '14:00';
-$('cClose').click();
+$('sDone').click();
+check('"Listo" guarda y vuelve a la lista', !$('mHome').hidden && $('mSched').hidden);
+$('menuClose').click();
+check('Cerrar cierra Ajustes', !$('dlgMenu').hasAttribute('open'));
 check('lunes ahora cerrado desde ajustes', d.querySelectorAll('.gh.closed').length === 1);
 check('martes 10-14: celdas fuera de horario inactivas', !!d.querySelector(`div.c.off`) );
 const tueFree = [...d.querySelectorAll(`.c.free[data-d="${tue}"]`)].map(c=>c.dataset.t);
 check('martes libre sólo 10:00-13:30 (+ reservas existentes)', tueFree.every(t=>t>='10:00'&&t<'14:00'));
 // validación
-$('menuBtn').click(); d.querySelector('[data-e="3"]').value='08:00'; $('cClose').click();
-check('rechaza fin antes de inicio', errors.some(e=>/Revisá los horarios/.test(e)) && $('dlgMenu').hasAttribute('open'));
+$('menuBtn').click(); d.querySelector('[data-go="mSched"]').click(); d.querySelector('[data-e="3"]').value='08:00'; $('sDone').click();
+check('rechaza fin antes de inicio y se queda en la pantalla', errors.some(e=>/Revisá los horarios/.test(e)) && $('dlgMenu').hasAttribute('open') && !$('mSched').hidden);
+$('menuBack').click();
+check('"‹ Ajustes" con un error tampoco sale', !$('mSched').hidden);
 $('dlgMenu').removeAttribute('open');
 
 // ---- 7) Reserva fuera de nuevo horario sigue visible
